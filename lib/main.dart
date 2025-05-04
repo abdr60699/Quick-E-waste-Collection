@@ -1,13 +1,29 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:url_launcher/url_launcher.dart';
+
+import 'firebase_options.dart';
 // Ensure this file is generated using FlutterFire CLI
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  // await dotenv.load(fileName: ".env"); // Load environment variables from .env file
+
+  await Firebase.initializeApp(
+    // options: FirebaseOptions(
+    //   apiKey: dotenv.env['FIREBASE_API_KEY']!, // Access API key from env
+    //   authDomain: dotenv.env['FIREBASE_AUTH_DOMAIN']!,
+    //   projectId: dotenv.env['FIREBASE_PROJECT_ID']!,
+    //   storageBucket: dotenv.env['FIREBASE_STORAGE_BUCKET']!,
+    //   messagingSenderId: dotenv.env['FIREBASE_MESSAGING_SENDER_ID']!,
+    //   appId: dotenv.env['FIREBASE_APP_ID']!,
+    // ),
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   runApp(MyApp());
 }
 
@@ -85,7 +101,7 @@ class _HomePageState extends State<HomePage> {
   void submitForm() async {
     if (_formKey.currentState!.validate()) {
       try {
-        await FirebaseFirestore.instance.collection('pickup_requests').add({
+        await FirebaseFirestore.instance.collection('form_submissions').add({
           'name': nameController.text,
           'phone': phoneController.text,
           'email': emailController.text,
@@ -219,26 +235,27 @@ class _HomePageState extends State<HomePage> {
                       fit: BoxFit.fitWidth,
                     ),
                   ),
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        'Old Devices, New Future. Recycle Smart',
-                        style: TextStyle(
-                          fontSize: 32,
-                          color: Colors.green[700],
+                  isMobile
+                      ? const SizedBox()
+                      : Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              'Old Devices, New Future. Recycle Smart',
+                              style: TextStyle(
+                                fontSize: 32,
+                                color: Colors.green[700],
+                              ),
+                            ),
+                            const SizedBox(height: 10),
+                            Text(
+                              'Easy and Eco-Friendly Recycling',
+                              style: TextStyle(
+                                  color: Colors.green[700], fontSize: 20),
+                            ),
+                            const SizedBox(height: 20),
+                          ],
                         ),
-                      ),
-                      const SizedBox(height: 10),
-                      Text(
-                        'Easy and Eco-Friendly Recycling',
-                        style:
-                            TextStyle(color: Colors.green[700], fontSize: 20),
-                      ),
-                      const SizedBox(height: 20),
-                  
-                    ],
-                  ),
                 ],
               ),
 
